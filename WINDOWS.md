@@ -75,89 +75,73 @@ El sistema distingue entre usuarios normales y el superusuario (root).
 
 Comandos de acceso:
 
-su (Substitute User): Permite cambiar de identidad temporalmente. Usar su - carga el entorno completo de root.
-+1
+``` bash
+su // "Substitute User". Permite cambiar de identidad temporalmente. Usar su - carga el entorno completo de root.
 
+sudo // Permite a usuarios autorizados ejecutar comandos como root usando su propia contraseña. Se configura en el archivo /etc/sudoers y permite un registro detallado de quién hace qué.
+```
+### 2.2 Gestión de Usuarios y Contraseñas
 
-sudo: Permite a usuarios autorizados ejecutar comandos como root usando su propia contraseña. Se configura en el archivo /etc/sudoers (editado con visudo) y permite un registro detallado de quién hace qué.
-+3
-
-2. Gestión de Usuarios y Contraseñas
 La información de las cuentas se almacena en archivos de texto plano.
 
+* **/etc/passwd**: Contiene información pública del usuario: nombre (username), UID (User ID), GID (Group ID), información personal, directorio home y la shell de inicio.
 
-/etc/passwd: Contiene información pública del usuario: nombre (username), UID (User ID), GID (Group ID), información personal, directorio home y la shell de inicio.
-+1
+* **/etc/shadow**: Almacena las contraseñas cifradas y las políticas de caducidad. Es legible solo por root para evitar ataques de fuerza bruta. Utiliza "salts" (valores aleatorios) para fortalecer el cifrado.
 
+### 2.3 Grupos de Usuarios
 
-/etc/shadow: Almacena las contraseñas cifradas y las políticas de caducidad. Es legible solo por root para evitar ataques de fuerza bruta. Utiliza "salts" (valores aleatorios) para fortalecer el cifrado.
-+3
-
-3. Grupos de Usuarios
 Permiten agrupar usuarios con intereses comunes para facilitar la gestión de recursos.
 
+* **Archivos:** Se definen en /etc/group y sus claves en /etc/gshadow.
 
-Archivos: Se definen en /etc/group y sus claves en /etc/gshadow.
-+1
+* **Tipos de pertenencia:** Un usuario tiene un grupo primario (definido en /etc/passwd) y puede pertenecer a múltiples grupos suplementarios.
 
+* **Grupo Privado de Usuario (UPG):** Red Hat y otras distribuciones crean un grupo exclusivo para cada usuario nuevo por seguridad.
 
-Tipos de pertenencia: Un usuario tiene un grupo primario (definido en /etc/passwd) y puede pertenecer a múltiples grupos suplementarios.
-+1
+### 2.4 Permisos Básicos (DAC)
 
-
-Grupo Privado de Usuario (UPG): Red Hat y otras distribuciones crean un grupo exclusivo para cada usuario nuevo por seguridad.
-
-4. Permisos Básicos (DAC)
 Linux utiliza un sistema de control de acceso discrecional (DAC) basado en tres entidades: Usuario propietario, Grupo propietario y Otros.
-+2
 
 Tipos de permisos:
 
+* **Lectura (r):** Ver contenido de archivo o listar un directorio.
 
-Lectura (r): Ver contenido de archivo o listar un directorio.
+* **Escritura (w):** Modificar archivo o crear/borrar ficheros en un directorio.
 
+* **Ejecución (x):** Ejecutar un programa o atravesar/entrar en un directorio.
 
-Escritura (w): Modificar archivo o crear/borrar ficheros en un directorio.
+> _**Proceso de validación:** El sistema comprueba secuencialmente: ¿Es el dueño? -> Si no, ¿Es del grupo? -> Si no, aplica permisos de "otros" . Si el proceso es root (UID 0), se ignoran las restricciones._
 
+**Herramientas:** 
+  * chmod (cambiar permisos)
+  * chown (cambiar dueño)
+  * umask (define permisos por defecto al crear archivos).
 
-Ejecución (x): Ejecutar un programa o atravesar/entrar en un directorio.
+### 2.5 Permisos Especiales
 
-Proceso de validación: El sistema comprueba secuencialmente: ¿Es el dueño? -> Si no, ¿Es del grupo? -> Si no, aplica permisos de "otros" . Si el proceso es root (UID 0), se ignoran las restricciones.
-+1
-
-
-Herramientas: chmod (cambiar permisos), chown (cambiar dueño), umask (define permisos por defecto al crear archivos).
-+2
-
-5. Permisos Especiales
 Existen permisos avanzados para casos específicos:
 
+* **SetUID (s en usuario):** Ejecuta un programa con los privilegios del propietario del archivo, no del usuario que lo lanza (ej. comando passwd para cambiar claves siendo usuario normal).
 
-SetUID (s en usuario): Ejecuta un programa con los privilegios del propietario del archivo, no del usuario que lo lanza (ej. comando passwd para cambiar claves siendo usuario normal).
-+1
+* **SetGID (s en grupo):** 
 
-SetGID (s en grupo):
+  * En ficheros: Ejecuta con los privilegios del grupo propietario.
+  * En directorios: Los archivos nuevos creados dentro heredan el grupo del directorio, no el del usuario creador. Útil para carpetas compartidas.
 
+* **Sticky Bit (t):** Se usa en directorios como /tmp. Solo el propietario de un archivo puede borrarlo, aunque otros tengan permiso de escritura en la carpeta.
 
-En ficheros: Ejecuta con los privilegios del grupo propietario.
+### 2.6 Listas de Control de Acceso (ACLs)
 
-En directorios: Los archivos nuevos creados dentro heredan el grupo del directorio, no el del usuario creador. Útil para carpetas compartidas.
-
-Sticky Bit (t): Se usa en directorios como /tmp. Solo el propietario de un archivo puede borrarlo, aunque otros tengan permiso de escritura en la carpeta.
-
-6. Listas de Control de Acceso (ACLs)
 Cuando los permisos básicos (rwx para u/g/o) no son suficientes, se usan ACLs para mayor granularidad.
 
 Permiten dar permisos a múltiples usuarios o grupos específicos en un mismo archivo.
-+1
 
-
-Comandos: getfacl para ver y setfacl para modificar.
-+1
+> _**Comandos:** getfacl para ver y setfacl para modificar._
 
 Incluye una máscara (mask) que limita los permisos máximos efectivos para usuarios y grupos secundarios.
 
-7. Control de Acceso Obligatorio (MAC)
+### 2.7 Control de Acceso Obligatorio (MAC)
+
 A diferencia del DAC (donde el usuario decide la seguridad de sus archivos), en MAC el administrador define políticas globales estrictas.
 
 Sistemas como SELinux o AppArmor confinan a los procesos para que solo accedan a lo estrictamente necesario, protegiendo al sistema incluso si un servicio es vulnerado o ejecutado por root.
