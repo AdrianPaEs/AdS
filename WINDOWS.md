@@ -44,18 +44,16 @@ Ficheros especiales: /dev/null (descarta salidas) y /dev/zero.
 El proceso de "montaje" asocia una partición física (ej. /dev/sdb1) a un directorio del sistema (ej. /home).
 
 * Manual: Se realiza mediante el comando mount.
-
 * Automático: Se configura en el fichero /etc/fstab, donde se definen el dispositivo, el punto de montaje, el tipo de sistema de archivos (ej. ext3, ext4, swap) y las opciones de arranque.
 
 ### 1.5 Arranque del Sistema (Boot)
 
 El gestor de arranque utilizado es GRUB2, el cual es flexible y permite cargar distintos sistemas operativos.
 
-Proceso: BIOS/UEFI -> MBR (Etapa 1) -> Gestor de arranque (Etapa 2/Menú) -> Carga del Kernel.
+* Proceso: BIOS/UEFI -> MBR (Etapa 1) -> Gestor de arranque (Etapa 2/Menú) -> Carga del Kernel.
+* UEFI: Reemplaza a la BIOS en sistemas modernos ofreciendo mayor flexibilidad.
 
-UEFI: Reemplaza a la BIOS en sistemas modernos ofreciendo mayor flexibilidad.
-
-6. Comandos y Ejercicios Prácticos
+### 1.6 Comandos 
 El documento finaliza con ejemplos prácticos de administración de discos:
 
 Comandos de diagnóstico:
