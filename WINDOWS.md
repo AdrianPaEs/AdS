@@ -71,7 +71,7 @@ El sistema distingue entre usuarios normales y el superusuario (root).
 
 **Root**: Tiene acceso total a todos los archivos, carpetas y comandos del sistema.
 
->_**Riesgos**: No se recomienda entrar directamente como root porque no queda registro individual de las acciones (logs) y obliga a compartir la contraseña entre administradores._>
+>_**Riesgos**: No se recomienda entrar directamente como root porque no queda registro individual de las acciones (logs) y obliga a compartir la contraseña entre administradores._
 
 Comandos de acceso:
 
